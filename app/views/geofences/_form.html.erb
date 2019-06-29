@@ -1,0 +1,58 @@
+<div id="form-app">
+  <% geofence.errors.full_messages.each do |msg| %>
+    <p><%= msg %></p>
+  <% end %>
+
+  <%= form_with model: geofence, local: true, html: {'v-on:submit.stop': 'validatesForm'} do |f| %>
+    <%= f.label :description, 'Description' %>
+    <%= f.text_field :description, 'v-model': 'description' %>
+    <%= f.label :latitude, 'Latitude' %>
+    <%= f.text_field :latitude, 'v-model': 'latitude' %>
+    <%= f.label :longitude, 'Longitude' %>
+    <%= f.text_field :longitude, 'v-model': 'longitude' %>
+    <%= f.label :radius, 'Radius' %>
+    <%= f.text_field :radius, 'v-model': 'radius' %>
+    <%= f.submit 'Submit' %>
+  <% end %>
+  <ul v-if="messages.length">
+    <li v-for="(msg, index) in messages" :key="index">{{msg}}</li>
+  </ul>
+</div>
+
+<script>
+var formApp = new Vue({
+  el: '#form-app',
+  data: {
+    description: '<%= geofence.description %>',
+    latitude: '<%= geofence.latitude %>',
+    longitude: '<%= geofence.longitude %>',
+    radius: '<%= geofence.radius %>',
+    messages: []
+  },
+  methods: {
+    validatesForm(e) {
+      this.messages.length = 0;
+
+      if(this.description.trim() == '') {
+        this.messages.push('Description can\'t be blank')
+      }
+      if(this.latitude.trim() == '') {
+        this.messages.push('Latitude can\'t be blank')
+      }
+      if(this.longitude.trim() == '') {
+        this.messages.push('Longitude can\'t be blank')
+      }
+      if(this.radius.trim() == '') {
+        this.messages.push('Radius can\'t be blank')
+      }
+
+      if(!this.messages.length){
+        return true
+      }
+
+      e.preventDefault()
+
+    }
+  }
+})
+</script>

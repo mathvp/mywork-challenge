@@ -1,0 +1,19 @@
+<h1>Geofences</h1>
+
+<% if @geofences.any? %>
+  <ul>
+    <% @geofences.each do |geofence| %>
+      <li>
+        Description: <%= geofence.description %> |
+        Latitude: <%= geofence.latitude %> |
+        Longitude: <%= geofence.longitude %> |
+        Radius: <%= number_with_precision(geofence.radius, precision: 2,  strip_insignificant_zeros: true) %> km |
+        <%= link_to 'Edit', edit_geofence_path(geofence.id), id: "edit-geo-#{geofence.id}" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Nothing found</p>
+<% end %>
+
+<%= link_to 'Add new Geofence', new_geofence_path %>

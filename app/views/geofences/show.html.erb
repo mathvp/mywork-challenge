@@ -1,0 +1,8 @@
+<h1>Geofence '<%= @geofence.description %>'</h1>
+<%= notice %>
+<%= alert %>
+<ul>
+  <li><%= @geofence.latitude %></li>
+  <li><%= @geofence.longitude %></li>
+  <li><%= number_with_precision(@geofence.radius, precision: 2, strip_insignificant_zeros: true) %> km</li>
+</ul>
