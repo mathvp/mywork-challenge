@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_28_222927) do
+ActiveRecord::Schema.define(version: 2019_06_30_030758) do
 
   create_table "geofences", force: :cascade do |t|
     t.string "description"
-    t.decimal "latitude"
-    t.decimal "longitude"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.decimal "radius"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 2019_06_28_222927) do
     t.integer "lng"
     t.decimal "latitude"
     t.decimal "longitude"
+  end
+
+  create_table "timetracks", force: :cascade do |t|
+    t.string "user"
+    t.string "comment"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.integer "geofence_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["geofence_id"], name: "index_timetracks_on_geofence_id"
   end
 
 end

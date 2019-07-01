@@ -1,0 +1,32 @@
+<div id="app">
+  <%= form_for(:timetrack, url: timetracks_register_location_path, local: true, html: { ref: 'form', class: 'test' }) do |f| %>
+    <%= f.hidden_field :latitude, 'v-model': 'latitude' %>
+    <%= f.hidden_field :longitude, 'v-model': 'longitude' %>
+    <%= f.submit 'Send', { class: 'hide' } %>
+  <% end %>
+</div>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    latitude: null,
+    longitude: null
+  },
+  methods: {
+    getUserPosition() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.latitude = position.coords.latitude
+        this.longitude = position.coords.longitude
+        this.$nextTick(() => {
+          this.$refs.form.submit()
+        })
+      })
+    }
+  },
+  mounted() {
+    this.getUserPosition()
+  }
+})
+
+</script>

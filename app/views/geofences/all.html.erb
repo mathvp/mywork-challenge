@@ -5,8 +5,8 @@
     <% @geofences.each do |geofence| %>
       <li>
         Description: <%= geofence.description %> |
-        Latitude: <%= geofence.latitude %> |
-        Longitude: <%= geofence.longitude %> |
+        Latitude: <%= number_with_precision(geofence.latitude, precision: 10) %> |
+        Longitude: <%= number_with_precision(geofence.longitude, precision: 10) %> |
         Radius: <%= number_with_precision(geofence.radius, precision: 2,  strip_insignificant_zeros: true) %> km |
         <%= link_to 'Edit', edit_geofence_path(geofence.id), id: "edit-geo-#{geofence.id}" %>
       </li>
