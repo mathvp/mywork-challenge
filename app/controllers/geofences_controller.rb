@@ -37,7 +37,7 @@ class GeofencesController < ApplicationController
   private
 
   def geofence_params
-    params.require(:geofence).permit(:description, :latitude, :longitude,
-                                     :radius)
+    params.require(:geofence).permit(:description, :latitude,
+                                     :longitude, :radius)
   end
 end

@@ -35,7 +35,7 @@ RSpec.describe Timetrack, type: :model do
 
   it 'is valid inside geofence' do
     geofence = create(:geofence, latitude: -22.954380, longitude: -46.546660,
-                      radius: 1)
+                                 radius: 1)
     timetrack = Timetrack.new(geofence: geofence, user: 'user_email@email.com',
                               latitude: -22.954160, longitude: -46.543990)
 
@@ -44,7 +44,7 @@ RSpec.describe Timetrack, type: :model do
 
   it 'is not valid outside geofence' do
     geofence = create(:geofence, latitude: -22.954380, longitude: -46.543990,
-                      radius: 1)
+                                 radius: 1)
     timetrack = Timetrack.new(geofence: geofence, user: 'user_email@email.com',
                               latitude: 40.712905, longitude: -74.003691)
 

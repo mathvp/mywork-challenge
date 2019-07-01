@@ -7,7 +7,6 @@ class Geofence < ApplicationRecord
   has_many :timetracks
 
   def self.check_timetrack_location(timetrack)
-
     Geofence.all.select do |geofence|
       distance = Haversine.distance(geofence.latitude, geofence.longitude,
                                     timetrack.latitude, timetrack.longitude)

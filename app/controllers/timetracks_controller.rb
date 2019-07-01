@@ -14,7 +14,7 @@ class TimetracksController < ApplicationController
 
   def location; end
 
-  def register_location;  end
+  def register_location; end
 
   def create
     @timetrack = Timetrack.new(timetrack_params)
@@ -29,7 +29,7 @@ class TimetracksController < ApplicationController
   private
 
   def timetrack_params
-    params.require(:timetrack).permit(:geofence_id, :user, :comment, :latitude, :longitude)
+    params.require(:timetrack).permit(:geofence_id, :user, :comment,
+                                      :latitude, :longitude)
   end
-
 end
