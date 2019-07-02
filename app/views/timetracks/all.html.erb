@@ -1,6 +1,8 @@
 <div class="container">
   <h1>Timetracks</h1>
-
+  <div class="row">
+    <p>Click on the timetrack to see on map.</p>
+  </div>
   <div class="row">
     <table class="striped highlight responsive-table flow-text">
       <thead>
@@ -15,14 +17,22 @@
       <tbody>
         <% @timetracks.each do |timetrack| %>
           <tr>
-            <td><%= timetrack.user %></td>
             <td>
-              <%= timetrack.created_at.localtime.strftime('%d/%m/%Y') %> -
-              <%= timetrack.created_at.localtime.strftime('%H:%M %P') %>
+              <%= link_to timetrack.user, timetrack, class: 'blue-grey-text text-darken-3' %>
             </td>
-            <td><%= timetrack.latitude %></td>
-            <td><%= timetrack.longitude %></td>
-            <td class="hide-on-small-only"><%= timetrack.comment %></td>
+            <td>
+              <%
+               timetrack_date_time = "#{timetrack.created_at.localtime.strftime('%d/%m/%Y')}"
+               timetrack_date_time += ' - '
+               timetrack_date_time += "#{timetrack.created_at.localtime.strftime('%H:%M %P')}"
+              %>
+              <%= link_to timetrack_date_time, timetrack, class: 'blue-grey-text text-darken-3' %>
+            </td>
+            <td><%= link_to timetrack.latitude, timetrack, class: 'blue-grey-text text-darken-3' %></td>
+            <td><%= link_to timetrack.longitude, timetrack, class: 'blue-grey-text text-darken-3' %></td>
+            <td class="hide-on-small-only">
+              <%= link_to timetrack.comment, timetrack, class: 'blue-grey-text text-darken-3' %>
+            </td>
           </tr>
         <% end %>
       </tbody>
@@ -34,4 +44,7 @@
       <i class="material-icons right">add</i> Register Timetrack
     <% end %>
   </div>
+  <br>
+  <br>
+  <br>
 </div>
