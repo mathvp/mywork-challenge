@@ -15,7 +15,7 @@ feature 'Company Manager adds New Geofence' do
     expect(page).to have_content('Work place')
     expect(page).to have_content('37.773972')
     expect(page).to have_content('-122.431297')
-    expect(page).to have_content('1 km')
+    expect(page).to have_content('1 mt')
   end
 
   scenario 'but all fields are required' do

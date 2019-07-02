@@ -17,6 +17,6 @@ feature 'Company Manager edits Geofence' do
     expect(page).to have_content('UpdatedGeofence')
     expect(page).to have_content('11.11111')
     expect(page).to have_content('22.22222')
-    expect(page).to have_content('1 km')
+    expect(page).to have_content('1 mt')
   end
 end

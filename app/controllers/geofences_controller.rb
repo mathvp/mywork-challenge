@@ -1,6 +1,6 @@
 class GeofencesController < ApplicationController
   def all
-    @geofences = Geofence.all
+    @geofences = Geofence.all.order('id DESC')
   end
 
   def new

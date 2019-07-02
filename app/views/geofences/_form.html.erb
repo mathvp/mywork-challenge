@@ -2,7 +2,13 @@
   <% geofence.errors.full_messages.each do |msg| %>
     <p><%= msg %></p>
   <% end %>
-
+  <br>
+  <div id="map" @click="mapClicked" style="width: 100%; height: 400px;">
+    <div class="progress" style="margin-top: 200px;">
+        <div class="indeterminate"></div>
+    </div>
+  </div>
+  <br>
   <%= form_with model: geofence, local: true, html: {'v-on:submit.stop': 'validatesForm'} do |f| %>
     <%= f.label :description, 'Description' %>
     <%= f.text_field :description, 'v-model': 'description' %>
@@ -10,8 +16,8 @@
     <%= f.text_field :latitude, 'v-model': 'latitude' %>
     <%= f.label :longitude, 'Longitude' %>
     <%= f.text_field :longitude, 'v-model': 'longitude' %>
-    <%= f.label :radius, 'Radius' %>
-    <%= f.text_field :radius, 'v-model': 'radius' %>
+    <%= f.label :radius, 'Radius (mt)' %>
+    <%= f.number_field :radius, 'v-model': 'radius' %>
     <br>
     <div class="row">
     <br>
@@ -36,6 +42,14 @@
   <br><br><br>
 </div>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+   crossorigin=""></script>
+
 <script>
 var formApp = new Vue({
   el: '#form-app',
@@ -43,8 +57,24 @@ var formApp = new Vue({
     description: '<%= geofence.description %>',
     latitude: '<%= geofence.latitude %>',
     longitude: '<%= geofence.longitude %>',
-    radius: '<%= geofence.radius %>',
-    messages: []
+    radius: <%= geofence.radius || 0 %>,
+    messages: [],
+    map: null,
+    tileLayer: null,
+    layers: [],
+    marker: null,
+    circle: null
+  },
+  watch: {
+    radius: function() {
+      this.setFenceCircle()
+    },
+    latitude: function() {
+      this.moveIntoMap()
+    },
+    longitude: function() {
+      this.moveIntoMap()
+    }
   },
   methods: {
     validatesForm(e) {
@@ -68,7 +98,78 @@ var formApp = new Vue({
       }
 
       e.preventDefault()
+    },
+    getUserPosition() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.latitude = position.coords.latitude
+        this.longitude = position.coords.longitude
+        this.initMap()
+      }, error => {
+        this.initMap()
+      })
+    },
+    initMap() {
+      const lat = this.latitude || -14.235
+      const lng = this.longitude || -51.9253
 
+      this.map = L.map('map').setView([lat, lng], 15)
+
+      this.tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWF0aHZwIiwiYSI6ImNqeGx5dnU4OTA1d2EzdW8zM3F5YTkzOHYifQ.b-X2rJrUaVOk_qnMk2w9kQ', {
+                          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                          maxZoom: 20,
+                          id: 'mapbox.streets',
+                          accessToken: 'pk.eyJ1IjoibWF0aHZwIiwiYSI6ImNqeGx5dnU4OTA1d2EzdW8zM3F5YTkzOHYifQ.b-X2rJrUaVOk_qnMk2w9kQ'
+                      })
+      this.tileLayer.addTo(this.map)
+
+      this.marker = L.marker([lat, lng]).addTo(this.map)
+
+      this.setFenceCircle()
+    },
+    mapClicked() {
+      this.map.on('click', this.onMapClick)
+    },
+    onMapClick(e) {
+      this.map.panTo(e.latlng, 15)
+      this.marker.setLatLng(e.latlng)
+      this.latitude = e.latlng.lat
+      this.longitude = e.latlng.lng
+
+      if(this.circle) {
+        this.circle.setLatLng([this.latitude, this.longitude])
+      }
+    },
+    setFenceCircle() {
+      if(this.radius && this.radius > 0){
+        if(this.circle) {
+          this.circle.setRadius(this.radius)
+        } else {
+          this.circle = L.circleMarker([this.latitude, this.longitude], {
+              color: 'red',
+              fillColor: '#f03',
+              fillOpacity: 0.5,
+              radius: this.radius
+          }).addTo(this.map)
+        }
+      }
+
+    },
+    moveIntoMap() {
+      this.map.panTo([this.latitude, this.longitude], 15)
+      this.marker.setLatLng([this.latitude, this.longitude])
+
+      if(this.circle) {
+        this.circle.setLatLng([this.latitude, this.longitude])
+      }
+    }
+  },
+  mounted() {
+    if(!this.latitude) {
+      this.$nextTick(() => {
+        this.getUserPosition()
+      })
+    } else {
+      this.initMap()
     }
   }
 })

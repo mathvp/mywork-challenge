@@ -1,6 +1,6 @@
 class TimetracksController < ApplicationController
   def all
-    @timetracks = Timetrack.all
+    @timetracks = Timetrack.all.order('id DESC')
   end
 
   def new

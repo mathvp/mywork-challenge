@@ -9,7 +9,7 @@
             <th>Description</th>
             <th>Latitude</th>
             <th>Longitude</th>
-            <th>Radius</th>
+            <th>Radius (mt)</th>
             <th>Edit</th>
           </tr>
         </thead>
@@ -33,7 +33,7 @@
               </td>
               <td>
                 <%= link_to geofence_path(geofence.id), class: 'blue-grey-text text-darken-3' do %>
-                  <%= "#{number_with_precision(geofence.radius, precision: 2,  strip_insignificant_zeros: true)} km" %>
+                  <%= "#{number_with_precision(geofence.radius, precision: 2,  strip_insignificant_zeros: true)} mt" %>
                 <% end %>
               </td>
               <td>
