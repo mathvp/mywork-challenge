@@ -1,31 +1,67 @@
 <div id="form-app">
-  <% @timetrack.errors.full_messages.each do |msg| %>
-    <p><%= msg %></p>
-  <% end %>
-
-  {{timeNow}}
-  {{latitude}}
-  {{longitude}}
-
-  <%= form_for @timetrack, local: true, html: {'v-on:submit.stop': 'validatesForm', 'ref': 'form'} do |f| %>
-    <%= f.label :user, 'Username' %>
-    <%= f.text_field :user, 'v-model': 'username' %>
-    <%= f.label :geofence_id, 'Geofence' %>
-    <%= f.select(:geofence_id, nil, {}, { class: 'browser-default', 'v-model':'geofence' }) do %>
-    <%= options_from_collection_for_select(@geofences, :id, :description) %>
+  <div class="container">
+    <h1>Register Timetrack</h1>
+    <% @timetrack.errors.full_messages.each do |msg| %>
+      <p><%= msg %></p>
     <% end %>
-    <!--f.collection_select :geofence_id, @geofences || [], :id, :description, { prompt:'Select Geofence' }, { class: 'browser-default', 'v-model':'geofence' }%>-->
-    <%= f.label :comment, 'Comment' %>
-    <%= f.text_area :comment %>
-    <%= f.hidden_field :latitude, 'v-model': 'latitude' %>
-    <%= f.hidden_field :longitude, 'v-model': 'longitude' %>
-    <%= f.submit 'Register' %>
-  <% end %>
-  <ul v-if="messages.length">
-    <li v-for="(msg, index) in messages" :key="index">{{msg}}</li>
-  </ul>
+    <br>
+    <h3><i class="medium material-icons left">access_time</i> {{timeNow}}</h3>
+    <br>
+    <p>
+      Latitude: {{latitude}}
+      <br>
+      Longitude: {{longitude}}
+    </p>
+    <div class="row">
+      <%= form_for @timetrack, local: true, html: {class: 'col', 'v-on:submit.stop': 'validatesForm', 'ref': 'form'} do |f| %>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">account_circle</i>
+            <%= f.text_field :user, 'v-model': 'username' %>
+            <%= f.label :user, 'Username' %>
+          </div>
+          <div class="input-field col s12">
+            <div class="s12">
+              <i class="material-icons prefix left">location_on</i>
+              <%= f.label :geofence_id, 'Geofence' %>
+            </div>
+            <br>
+            <div class="s12">
+              <%= f.select(:geofence_id, nil, {}, { class: 'browser-default', 'v-model':'geofence'}) do %>
+                <%= options_from_collection_for_select(@geofences, :id, :description) %>
+              <% end %>
+            </div>
+          </div>
+          <!--f.collection_select :geofence_id, @geofences || [], :id, :description, { prompt:'Select Geofence' }, { class: 'browser-default', 'v-model':'geofence' }%>-->
+          <div class="input-field col s12">
+            <i class="material-icons prefix">mode_edit</i>
+            <%= f.text_area :comment, class: 'materialize-textarea' %>
+            <%= f.label :comment, 'Comment' %>
+          </div>
+          <%= f.hidden_field :latitude, 'v-model': 'latitude' %>
+          <%= f.hidden_field :longitude, 'v-model': 'longitude' %>
+          <br>
+          <div class="input-field col s12">
+            <br>
+            <%= f.button type: 'submit', class: 'btn-large waves-effect waves-light red accent-2' do %>
+              Register <i class="material-icons right medium">fingerprint</i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <ul v-if="messages.length">
+      <li v-for="(msg, index) in messages" :key="index">
+        <div class="card-panel red accent-4 white-text">
+          <i class="material-icons medium left">error</i>
+          <p>{{msg}}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <br>
+  <br>
 </div>
-
 
 <script>
 var formApp = new Vue({
@@ -33,10 +69,11 @@ var formApp = new Vue({
   data: {
     username: '<%= @timetrack.user %>',
     geofence: '<%= @timetrack.geofence %>',
-    latitude: null,
-    longitude: null,
+    latitude: '<%= @timetrack.latitude %>',
+    longitude: '<%= @timetrack.longitude %>',
     messages: [],
     timeNow: '<%= Time.current.strftime('%H:%M:%S') %>',
+    dateNow: '<%= Time.current.strftime('%B %D %Y') %>',
     hoursNow: <%= Time.current.strftime('%H') %>,
     minNow: <%= Time.current.strftime('%M') %>,
     secNow: <%= Time.current.strftime('%S') %>
@@ -76,8 +113,8 @@ var formApp = new Vue({
       let newSeconds = this.adjustZeros( newTime.getSeconds() )
       let todayDate  = `${newTime.getDate()}/${newTime.getMonth()}/${newTime.getFullYear()}`
 
-      this.timeNow = `${todayDate} - ${newHours}:${newMinutes}:${newSeconds}`
-
+      this.timeNow = `${newHours}:${newMinutes}:${newSeconds}`
+      this.dateNow = todayDate
       this.secNow += 1
 
       var t = setTimeout(this.startTime, 1000);

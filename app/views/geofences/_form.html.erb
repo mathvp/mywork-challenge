@@ -12,11 +12,28 @@
     <%= f.text_field :longitude, 'v-model': 'longitude' %>
     <%= f.label :radius, 'Radius' %>
     <%= f.text_field :radius, 'v-model': 'radius' %>
-    <%= f.submit 'Submit' %>
+    <br>
+    <div class="row">
+    <br>
+      <%= link_to all_geofences_path, class: 'btn-large waves-effect waves-light blue-grey lighten-4 black-text' do %>
+        <i class="material-icons left">arrow_back</i> Back
+      <% end %>
+      &nbsp;
+      <%= f.button type: 'submit', class: 'btn-large waves-effect waves-light red accent-2' do %>
+        Submit
+      <% end %>
+    </div>
+
   <% end %>
   <ul v-if="messages.length">
-    <li v-for="(msg, index) in messages" :key="index">{{msg}}</li>
+    <li v-for="(msg, index) in messages" :key="index">
+      <div class="card-panel red accent-4 white-text">
+        <i class="material-icons medium left">error</i>
+        <p>{{msg}}</p>
+      </div>
+    </li>
   </ul>
+  <br><br><br>
 </div>
 
 <script>

@@ -1,19 +1,61 @@
+<div class="container">
 <h1>Geofences</h1>
 
-<% if @geofences.any? %>
-  <ul>
-    <% @geofences.each do |geofence| %>
-      <li>
-        Description: <%= geofence.description %> |
-        Latitude: <%= number_with_precision(geofence.latitude, precision: 10) %> |
-        Longitude: <%= number_with_precision(geofence.longitude, precision: 10) %> |
-        Radius: <%= number_with_precision(geofence.radius, precision: 2,  strip_insignificant_zeros: true) %> km |
-        <%= link_to 'Edit', edit_geofence_path(geofence.id), id: "edit-geo-#{geofence.id}" %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>Nothing found</p>
-<% end %>
+  <div class="row">
+    <% if @geofences.any? %>
+      <table class="striped highlight responsive-table flow-text">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Radius</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @geofences.each do |geofence| %>
+            <tr>
+              <td>
+                <%= link_to geofence_path(geofence.id), class: 'blue-grey-text text-darken-3' do  %>
+                  <%= geofence.description %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to geofence_path(geofence.id), class: 'blue-grey-text text-darken-3' do %>
+                  <%= number_with_precision(geofence.latitude, precision: 10) %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to geofence_path(geofence.id), class: 'blue-grey-text text-darken-3' do %>
+                  <%= number_with_precision(geofence.longitude, precision: 10) %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to geofence_path(geofence.id), class: 'blue-grey-text text-darken-3' do %>
+                  <%= "#{number_with_precision(geofence.radius, precision: 2,  strip_insignificant_zeros: true)} km" %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to edit_geofence_path(geofence.id), id: "edit-geo-#{geofence.id}", class: 'waves-effect waves-light btn-small' do %>
+                  <i class="material-icons left">edit</i> Edit
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
 
-<%= link_to 'Add new Geofence', new_geofence_path %>
+      <% else %>
+        <p class="flow-text">Nothing found</p>
+      <% end %>
+    </div>
+    <br>
+    <div class="row">
+      <%= link_to new_geofence_path, class: 'btn-large waves-effect waves-light red accent-2' do %>
+        <i class="material-icons right">add</i> Add new Geofence
+      <% end %>
+    </div>
+    <br><br>
+
+</div>

@@ -8,9 +8,65 @@
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    main {
+      flex: 1 0 auto;
+    }
+    </style>
   </head>
-
   <body>
-    <%= yield %>
+    <nav class="red accent-2" role="navigation">
+      <div class="nav-wrapper container">
+        <%= link_to 'Timetrack', root_path, class: 'brand-logo', id: 'logo-container' %>
+        <ul class="right hide-on-med-and-down">
+          <li><%= link_to 'Geofences', all_geofences_path %></li>
+          <li><%= link_to 'Timetracks', all_timetracks_path %></li>
+          <li><%= link_to 'Register Timetrack', location_timetracks_path %></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+          <li><%= link_to 'Geofences', all_geofences_path %></li>
+          <li><%= link_to 'Timetracks', all_timetracks_path %></li>
+          <li><%= link_to 'Register Timetrack', location_timetracks_path %></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      </div>
+    </nav>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <footer class="page-footer red accent-2">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Matheus Vieira</h5>
+            <ul>
+              <li>matheusvieiradepaula@gmail.com</li>
+              <li><a class="white-text" href="https://github.com/mathvp" target="_blank">github.com/mathvp</a></li>
+              <li><a class="white-text" href="https://www.linkedin.com/in/mathvp/" target="_blank">LinkedIn</a></li>
+            </ul>
+            <p class="grey-text text-lighten-4"></p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container center-align">
+          Made with Ruby on Rails | 2019
+        </div>
+      </div>
+    </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+      });
+    </script>
   </body>
 </html>

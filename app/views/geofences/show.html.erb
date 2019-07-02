@@ -1,8 +1,39 @@
-<h1>Geofence '<%= @geofence.description %>'</h1>
-<%= notice %>
-<%= alert %>
-<ul>
-  <li><%= @geofence.latitude %></li>
-  <li><%= @geofence.longitude %></li>
-  <li><%= number_with_precision(@geofence.radius, precision: 2, strip_insignificant_zeros: true) %> km</li>
-</ul>
+<div class="container">
+  <h1>Geofence '<%= @geofence.description %>'</h1>
+  <% if notice %>
+    <div class="card-panel green accent-2 green-text text-darken-4">
+      <i class="material-icons medium left">check_circle</i>
+      <p class="flow-text"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col s6">
+      <table class="flow-text highlight responsive-table ">
+        <tr>
+          <td>Latitude:</td>
+          <td><%= @geofence.latitude %></td>
+        </tr>
+        <tr>
+          <td>Longitude</td>
+          <td><%= @geofence.longitude %></td>
+        </tr>
+        <tr>
+          <td>Radius</td>
+          <td>
+            <%= number_with_precision(@geofence.radius, precision: 2, strip_insignificant_zeros: true) %> km
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <br><br>
+  <div class="row">
+    <%= link_to all_geofences_path, class: 'btn-large waves-effect waves-light blue-grey lighten-4 black-text' do %>
+      <i class="material-icons left">arrow_back</i> Back
+    <% end %>
+  </div>
+  <br><br><br>
+
+</div>

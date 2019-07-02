@@ -1,15 +1,37 @@
-<h1>Timetracks</h1>
+<div class="container">
+  <h1>Timetracks</h1>
 
-<ul>
-  <% @timetracks.each do |timetrack| %>
-    <li>
-    <%= timetrack.user %> |
-    <%= timetrack.created_at %> |
-    <%= timetrack.latitude %> |
-    <%= timetrack.longitude %> |
-    <%= timetrack.comment %>
-    </li>
-  <% end %>
-</ul>
-
-<%= link_to 'Register Timetrack', location_timetracks_path %>
+  <div class="row">
+    <table class="striped highlight responsive-table flow-text">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Registered at</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th class="hide-on-small-only">Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @timetracks.each do |timetrack| %>
+          <tr>
+            <td><%= timetrack.user %></td>
+            <td>
+              <%= timetrack.created_at.localtime.strftime('%d/%m/%Y') %> -
+              <%= timetrack.created_at.localtime.strftime('%H:%M %P') %>
+            </td>
+            <td><%= timetrack.latitude %></td>
+            <td><%= timetrack.longitude %></td>
+            <td class="hide-on-small-only"><%= timetrack.comment %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <div class="row">
+    <%= link_to location_timetracks_path, class: 'btn-large waves-effect waves-light red accent-2' do %>
+      <i class="material-icons right">add</i> Register Timetrack
+    <% end %>
+  </div>
+</div>
