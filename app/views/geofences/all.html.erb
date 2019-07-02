@@ -1,6 +1,13 @@
 <div class="container">
 <h1>Geofences</h1>
 
+  <% if notice %>
+    <div class="card-panel green accent-2 green-text text-darken-4">
+      <i class="material-icons medium left">check_circle</i>
+      <p class="flow-text"><%= notice %></p>
+    </div>
+  <% end %>
+
   <div class="row">
     <% if @geofences.any? %>
       <table class="striped highlight responsive-table flow-text">
@@ -11,6 +18,7 @@
             <th>Longitude</th>
             <th>Radius (mt)</th>
             <th>Edit</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
@@ -37,8 +45,13 @@
                 <% end %>
               </td>
               <td>
-                <%= link_to edit_geofence_path(geofence.id), id: "edit-geo-#{geofence.id}", class: 'waves-effect waves-light btn-small' do %>
-                  <i class="material-icons left">edit</i> Edit
+                <%= link_to edit_geofence_path(geofence.id), id: "edit-geo-#{geofence.id}", class: 'btn-floating waves-effect waves-light btn-small' do %>
+                  <i class="material-icons left">edit</i>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to geofence, method: :delete, id: "delete-geo-#{geofence.id}", class: 'delete btn-floating waves-effect waves-light btn-small red' do %>
+                  <i class="material-icons center">delete</i>
                 <% end %>
               </td>
             </tr>
@@ -57,5 +70,8 @@
       <% end %>
     </div>
     <br><br>
-
 </div>
+
+<script>
+
+</script>

@@ -34,6 +34,16 @@ class GeofencesController < ApplicationController
     end
   end
 
+  def destroy
+    geofence = Geofence.find_by(id: params[:id])
+
+    if geofence.destroy
+      redirect_to all_geofences_path, notice: 'Geofence successfully removed'
+    else
+      redirect_to all_geofences_path, alert: 'Error: Geofence was not removed'
+    end
+  end
+
   private
 
   def geofence_params
