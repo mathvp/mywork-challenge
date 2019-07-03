@@ -94,7 +94,7 @@ var formApp = new Vue({
       if(this.longitude.trim() == '') {
         this.messages.push('Longitude can\'t be blank')
       }
-      if(this.radius) {
+      if(!this.radius) {
         this.messages.push('Radius can\'t be blank')
       }
 
