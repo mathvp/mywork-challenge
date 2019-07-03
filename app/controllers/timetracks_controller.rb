@@ -12,8 +12,6 @@ class TimetracksController < ApplicationController
   end
 
   def show
-    redirect_to location_timetracks_path unless params[:latitude] &&
-                                                params[:longitude]
     @timetrack = Timetrack.find_by(id: params[:id])
   end
 

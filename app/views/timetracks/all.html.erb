@@ -4,39 +4,43 @@
     <p>Click on the timetrack to see on map.</p>
   </div>
   <div class="row">
-    <table class="striped highlight responsive-table flow-text">
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Registered at</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
-          <th class="hide-on-small-only">Comment</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @timetracks.each do |timetrack| %>
+    <% if @timetracks.any? %>
+      <table class="striped highlight responsive-table flow-text">
+        <thead>
           <tr>
-            <td>
-              <%= link_to timetrack.user, timetrack, class: 'blue-grey-text text-darken-3' %>
-            </td>
-            <td>
-              <%
-               timetrack_date_time = "#{timetrack.created_at.localtime.strftime('%d/%m/%Y')}"
-               timetrack_date_time += ' - '
-               timetrack_date_time += "#{timetrack.created_at.localtime.strftime('%H:%M %P')}"
-              %>
-              <%= link_to timetrack_date_time, timetrack, class: 'blue-grey-text text-darken-3' %>
-            </td>
-            <td><%= link_to timetrack.latitude, timetrack, class: 'blue-grey-text text-darken-3' %></td>
-            <td><%= link_to timetrack.longitude, timetrack, class: 'blue-grey-text text-darken-3' %></td>
-            <td class="hide-on-small-only">
-              <%= link_to timetrack.comment, timetrack, class: 'blue-grey-text text-darken-3' %>
-            </td>
+            <th>User</th>
+            <th>Registered at</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th class="hide-on-small-only">Comment</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @timetracks.each do |timetrack| %>
+            <tr>
+              <td>
+                <%= link_to timetrack.user, timetrack, class: 'blue-grey-text text-darken-3' %>
+              </td>
+              <td>
+                <%
+                timetrack_date_time = "#{timetrack.created_at.localtime.strftime('%d/%m/%Y')}"
+                timetrack_date_time += ' - '
+                timetrack_date_time += "#{timetrack.created_at.localtime.strftime('%H:%M %P')}"
+                %>
+                <%= link_to timetrack_date_time, timetrack, class: 'blue-grey-text text-darken-3' %>
+              </td>
+              <td><%= link_to timetrack.latitude, timetrack, class: 'blue-grey-text text-darken-3' %></td>
+              <td><%= link_to timetrack.longitude, timetrack, class: 'blue-grey-text text-darken-3' %></td>
+              <td class="hide-on-small-only">
+                <%= link_to timetrack.comment, timetrack, class: 'blue-grey-text text-darken-3' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="flow-text">Nothing found</p>
+    <% end %>
   </div>
   <br>
   <div class="row">
