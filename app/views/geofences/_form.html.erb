@@ -1,7 +1,12 @@
 <div id="form-app">
   <% geofence.errors.full_messages.each do |msg| %>
-    <p><%= msg %></p>
+    <div class="card-panel red accent-4 white-text">
+      <i class="material-icons medium left">error</i>
+      <p><%= msg %></p>
+    </div>
   <% end %>
+  <br>
+  <p>Click on the map or insert in the form bellow</p>
   <br>
   <div id="map" @click="mapClicked" style="width: 100%; height: 400px;">
     <div class="progress" style="margin-top: 200px;">
@@ -89,7 +94,7 @@ var formApp = new Vue({
       if(this.longitude.trim() == '') {
         this.messages.push('Longitude can\'t be blank')
       }
-      if(this.radius.trim() == '') {
+      if(this.radius) {
         this.messages.push('Radius can\'t be blank')
       }
 
