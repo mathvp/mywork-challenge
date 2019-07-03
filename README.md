@@ -37,4 +37,5 @@ To help me with js frontend part I choose the [Vue.js](https://github.com/vuejs/
   - **Leaflet**
   For the maps I used [Leaflet](https://github.com/Leaflet/Leaflet) instead of Google Maps, simply because Google Maps wasn't work with free API. It was required to insert billing information. So I found the Leaflet and I really like the easy way to create the maps and add markers to it. And works good with Vuejs.
 
-
+  - **Rspec and Capybara**
+  The tests was made with Rspec and Capybara GEMs.
