@@ -2,53 +2,62 @@
   <div class="container">
     <h1>Register Timetrack</h1>
     <% @timetrack.errors.full_messages.each do |msg| %>
-      <p><%= msg %></p>
+      <div class="card-panel red accent-4 white-text">
+        <i class="material-icons medium left">error</i>
+        <p><%= msg %></p>
+      </div>
     <% end %>
     <br>
-    <h3><i class="medium material-icons left">access_time</i> {{timeNow}}</h3>
-    <br>
-    <p>
-      Latitude: {{latitude}}
-      <br>
-      Longitude: {{longitude}}
-    </p>
     <div class="row">
-      <%= form_for @timetrack, local: true, html: {class: 'col', 'v-on:submit.stop': 'validatesForm', 'ref': 'form'} do |f| %>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">account_circle</i>
-            <%= f.text_field :user, 'v-model': 'username' %>
-            <%= f.label :user, 'Username' %>
-          </div>
-          <div class="input-field col s12">
-            <div class="s12">
-              <i class="material-icons prefix left">location_on</i>
-              <%= f.label :geofence_id, 'Geofence' %>
+      <div class="col s6">
+        <%= form_for @timetrack, local: true, html: {class: 'col', 'v-on:submit.stop': 'validatesForm', 'ref': 'form'} do |f| %>
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">account_circle</i>
+              <%= f.text_field :user, 'v-model': 'username' %>
+              <%= f.label :user, 'Username' %>
             </div>
+            <div class="input-field col s12">
+              <div class="s12">
+                <i class="material-icons prefix left">location_on</i>
+                <%= f.label :geofence_id, 'Geofence' %>
+                <%= f.collection_select :geofence_id, @geofences || [], :id, :description, { prompt:'Select Geofence' }, { class: '', 'v-model':'geofence', 'ref':'geoSelect' }%>
+              </div>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">mode_edit</i>
+              <%= f.text_area :comment, class: 'materialize-textarea' %>
+              <%= f.label :comment, 'Comment' %>
+            </div>
+            <%= f.hidden_field :latitude, 'v-model': 'latitude' %>
+            <%= f.hidden_field :longitude, 'v-model': 'longitude' %>
             <br>
-            <div class="s12">
-              <%= f.select(:geofence_id, nil, {}, { class: 'browser-default', 'v-model':'geofence'}) do %>
-                <%= options_from_collection_for_select(@geofences, :id, :description) %>
-              <% end %>
+            <div class="row">
+              <div class="col s7">
+                  <h3><i class="medium material-icons left">access_time</i> {{timeNow}}</h3>
+                  <p style="padding-left:5rem; font-size:1.2rem; margin-top:-15px;">
+                    <%= Time.current.strftime('%d/%m/%Y') %>
+                  </p>
+                  <br>
+                </div>
+                <div class="input-field col s5">
+                  <br>
+                  <%= f.button type: 'submit', class: 'btn-large waves-effect waves-light red accent-2', ':disabled':'btnDisabled' do %>
+                    Register <i class="material-icons right medium">fingerprint</i>
+                  <% end %>
+                </div>
             </div>
           </div>
-          <!--f.collection_select :geofence_id, @geofences || [], :id, :description, { prompt:'Select Geofence' }, { class: 'browser-default', 'v-model':'geofence' }%>-->
-          <div class="input-field col s12">
-            <i class="material-icons prefix">mode_edit</i>
-            <%= f.text_area :comment, class: 'materialize-textarea' %>
-            <%= f.label :comment, 'Comment' %>
-          </div>
-          <%= f.hidden_field :latitude, 'v-model': 'latitude' %>
-          <%= f.hidden_field :longitude, 'v-model': 'longitude' %>
-          <br>
-          <div class="input-field col s12">
-            <br>
-            <%= f.button type: 'submit', class: 'btn-large waves-effect waves-light red accent-2' do %>
-              Register <i class="material-icons right medium">fingerprint</i>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
+
+      <div class="col s6">
+        <br>
+        <div id="map" style="width:100%; height: 250px;"></div>
+        <p class="center-align flow-text">
+          Latitude: {{latitude}} | Longitude: {{longitude}}
+        </p>
+      </div>
     </div>
     <ul v-if="messages.length">
       <li v-for="(msg, index) in messages" :key="index">
@@ -76,7 +85,9 @@ var formApp = new Vue({
     dateNow: '<%= Time.current.strftime('%B %D %Y') %>',
     hoursNow: <%= Time.current.strftime('%H') %>,
     minNow: <%= Time.current.strftime('%M') %>,
-    secNow: <%= Time.current.strftime('%S') %>
+    secNow: <%= Time.current.strftime('%S') %>,
+    geofencesQtd: <%= @geofences.size %>,
+    btnDisabled: false
   },
   methods: {
     validatesForm(e) {
@@ -123,10 +134,45 @@ var formApp = new Vue({
   mounted(){
     this.$nextTick(() => {
       this.startTime()
+      const select = this.$refs.geoSelect
+      M.FormSelect.init(select)
+      if(this.geofencesQtd == 0) {
+        this.btnDisabled = true
+      }
     })
   }
 })
 
 </script>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
 
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+   crossorigin=""></script>
+
+<script>
+  var mymap = L.map('map').setView([<%= @timetrack.latitude %>, <%= @timetrack.longitude %>], 16);
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWF0aHZwIiwiYSI6ImNqeGx5dnU4OTA1d2EzdW8zM3F5YTkzOHYifQ.b-X2rJrUaVOk_qnMk2w9kQ', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 20,
+      id: 'mapbox.streets',
+      accessToken: 'pk.eyJ1IjoibWF0aHZwIiwiYSI6ImNqeGx5dnU4OTA1d2EzdW8zM3F5YTkzOHYifQ.b-X2rJrUaVOk_qnMk2w9kQ'
+  }).addTo(mymap);
+
+  L.marker([<%= @timetrack.latitude %>, <%= @timetrack.longitude %>]).addTo(mymap);
+
+  <% if @geofences.any? %>
+    <% @geofences.each do |geofence| %>
+      L.circle([<%= geofence.latitude %>, <%= geofence.longitude %>], {
+              color: 'red',
+              fillColor: '#f03',
+              fillOpacity: 0.5,
+              radius: <%= geofence.radius %>
+      }).addTo(mymap);
+    <% end %>
+  <% end %>
+
+</script>
